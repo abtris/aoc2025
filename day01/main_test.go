@@ -13,3 +13,15 @@ func TestSolveWithTestInput(t *testing.T) {
 		t.Errorf("Expected %d, got %d", expected, result)
 	}
 }
+
+func TestSolvePart2WithTestInput(t *testing.T) {
+	result, err := solvePart2("input_test")
+	if err != nil {
+		t.Fatalf("Error solving part 2: %v", err)
+	}
+
+	expected := 6
+	if result != expected {
+		t.Errorf("Expected %d, got %d", expected, result)
+	}
+}
