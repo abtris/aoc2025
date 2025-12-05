@@ -41,3 +41,30 @@ func TestSolveWithTestInput(t *testing.T) {
 		t.Errorf("Expected %d, got %d", expected, result)
 	}
 }
+
+func TestCountTotalIDs(t *testing.T) {
+	ranges := []Range{
+		{3, 5},
+		{10, 14},
+		{16, 20},
+		{12, 18},
+	}
+
+	result := countTotalIDs(ranges)
+	expected := 14 // 3,4,5,10,11,12,13,14,15,16,17,18,19,20
+	if result != expected {
+		t.Errorf("Expected %d, got %d", expected, result)
+	}
+}
+
+func TestSolvePart2WithTestInput(t *testing.T) {
+	result, err := solvePart2("input_test")
+	if err != nil {
+		t.Fatalf("Error solving part 2: %v", err)
+	}
+
+	expected := 14
+	if result != expected {
+		t.Errorf("Expected %d, got %d", expected, result)
+	}
+}
