@@ -9,6 +9,7 @@ all: | $(directory)
 	@echo "package main" >> "${directory}/main_test.go"
 	@touch "${directory}/input"
 	@touch "${directory}/input_test"
+	@touch "${directory}/story.md"
 
 $(directory):
 	@echo "Folder $(directory) does not exist"
