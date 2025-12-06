@@ -32,3 +32,34 @@ func TestSolveWithTestInput(t *testing.T) {
 		t.Errorf("Expected %d, got %d", expected, result)
 	}
 }
+
+func TestCalculateProblemPart2(t *testing.T) {
+	tests := []struct {
+		problem  Problem
+		expected int64
+	}{
+		{Problem{[]int{4, 431, 623}, "+"}, 1058},
+		{Problem{[]int{175, 581, 32}, "*"}, 3253600},
+		{Problem{[]int{8, 248, 369}, "+"}, 625},
+		{Problem{[]int{356, 24, 1}, "*"}, 8544},
+	}
+
+	for _, tt := range tests {
+		result := calculateProblemPart2(tt.problem)
+		if result != tt.expected {
+			t.Errorf("calculateProblemPart2(%v) = %d, expected %d", tt.problem, result, tt.expected)
+		}
+	}
+}
+
+func TestSolvePart2WithTestInput(t *testing.T) {
+	result, err := solvePart2("input_test")
+	if err != nil {
+		t.Fatalf("Error solving part 2: %v", err)
+	}
+
+	expected := int64(3263827) // 1058 + 3253600 + 625 + 8544
+	if result != expected {
+		t.Errorf("Expected %d, got %d", expected, result)
+	}
+}
