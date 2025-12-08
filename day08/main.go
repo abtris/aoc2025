@@ -159,11 +159,89 @@ func solve(filename string, numConnections int) (int, error) {
 	return result, nil
 }
 
+func solvePart2(filename string) (int, error) {
+	file, err := os.Open(filename)
+	if err != nil {
+		return 0, err
+	}
+	defer file.Close()
+
+	// Read all points
+	var points []Point
+	scanner := bufio.NewScanner(file)
+	for scanner.Scan() {
+		line := strings.TrimSpace(scanner.Text())
+		if line == "" {
+			continue
+		}
+
+		parts := strings.Split(line, ",")
+		if len(parts) != 3 {
+			continue
+		}
+
+		x, _ := strconv.Atoi(parts[0])
+		y, _ := strconv.Atoi(parts[1])
+		z, _ := strconv.Atoi(parts[2])
+
+		points = append(points, Point{x: x, y: y, z: z})
+	}
+
+	if err := scanner.Err(); err != nil {
+		return 0, err
+	}
+
+	n := len(points)
+
+	// Create all edges with distances
+	var edges []Edge
+	for i := 0; i < n; i++ {
+		for j := i + 1; j < n; j++ {
+			dist := distance(points[i], points[j])
+			edges = append(edges, Edge{i: i, j: j, distance: dist})
+		}
+	}
+
+	// Sort edges by distance
+	sort.Slice(edges, func(i, j int) bool {
+		return edges[i].distance < edges[j].distance
+	})
+
+	// Use Union-Find to connect until all are in one circuit
+	uf := NewUnionFind(n)
+	numComponents := n
+
+	for _, edge := range edges {
+		if uf.Union(edge.i, edge.j) {
+			numComponents--
+
+			// Check if all are now in one circuit
+			if numComponents == 1 {
+				// This is the last connection needed
+				// Multiply the X coordinates
+				result := points[edge.i].x * points[edge.j].x
+				return result, nil
+			}
+		}
+	}
+
+	return 0, fmt.Errorf("could not connect all junction boxes")
+}
+
 func main() {
+	// Part 1
 	result, err := solve("input", 1000)
 	if err != nil {
-		fmt.Fprintf(os.Stderr, "Error: %v\n", err)
+		fmt.Fprintf(os.Stderr, "Error (Part 1): %v\n", err)
 		os.Exit(1)
 	}
-	fmt.Printf("Product of three largest circuits: %d\n", result)
+	fmt.Printf("Part 1 - Product of three largest circuits: %d\n", result)
+
+	// Part 2
+	result2, err := solvePart2("input")
+	if err != nil {
+		fmt.Fprintf(os.Stderr, "Error (Part 2): %v\n", err)
+		os.Exit(1)
+	}
+	fmt.Printf("Part 2 - Product of X coordinates: %d\n", result2)
 }
